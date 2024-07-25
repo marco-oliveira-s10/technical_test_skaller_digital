@@ -1,4 +1,3 @@
-# app.py
 from flask import Flask
 from flask_restx import Api
 from routes.email import email_ns

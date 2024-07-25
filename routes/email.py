@@ -1,6 +1,6 @@
-# routes/email.py
 from flask_restx import Namespace, Resource, fields
-from flask import request, jsonify
+from flask import request
+from email_validator import validate_email, EmailNotValidError
 from controllers.email_controller import send_email
 
 email_ns = Namespace('Email operations', description='Operations related to email sending')
@@ -23,6 +23,12 @@ class SendEmail(Resource):
         
         if not to or not subject or not body:
             return {'error': 'Missing required fields'}, 400
+
+        # Validação do e-mail
+        try:
+            validate_email(to)
+        except EmailNotValidError as e:
+            return {'error': 'Invalid email address'}, 400
         
         success, message = send_email(to, subject, body)
         
